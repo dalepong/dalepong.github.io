@@ -15,15 +15,20 @@
     }
 
     #game {
-      position: relative;
-      width: 90vw;
-      max-width: 600px;
-      height: 70vh;
-      max-height: 400px;
-      background-color: #000;
-      border: 4px solid #fff;
-      overflow: hidden;
-    }
+  position: relative;
+  width: 90vw;
+  max-width: 600px;
+  height: 70vh;
+  max-height: 400px;
+
+  background-image: url('train.jpg'); 
+  background-size: cover;  
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border: 4px solid #fff;
+  overflow: hidden;
+}
 
     .paddle {
       position: absolute;
@@ -36,19 +41,19 @@
 
     #left {
       left: 10px;
-      background-image: url('dalered.jpg'); /* 👈 Replace */
+      background-image: url('dalered.jpg'); 
     }
 
     #right {
       right: 10px;
-      background-image: url('dalered.jpg'); /* 👈 Replace */
+      background-image: url('dalered.jpg'); 
     }
 
     #ball {
       position: absolute;
       width: 16px;
       height: 16px;
-      background-image: url('lebron.jpg'); /* 👈 Replace */
+      background-image: url('lebron.jpg'); 
       background-size: 100% 100%;
       background-repeat: no-repeat;
       background-position: center;
@@ -62,7 +67,7 @@
       font-size: 24px;
       font-weight: bold;
       color: white;
-      z-index: 10; /* Always above */
+      z-index: 10; 
     }
   </style>
 </head>
@@ -96,7 +101,7 @@
     let rightScore = 0;
 
     const paddleSpeed = 6;
-    const aiSpeed = 4; // AI paddle movement speed
+    const aiSpeed = 4; 
 
     const keys = {};
     document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
@@ -110,12 +115,12 @@
     }
 
     function update() {
-      // Left paddle (player)
+      // player
       if (keys["w"]) leftY -= paddleSpeed;
       if (keys["s"]) leftY += paddleSpeed;
       leftY = Math.max(0, Math.min(gameHeight - 80, leftY));
 
-      // Right paddle (AI)
+      // ai
       const aiCenter = rightY + 40;
       if (aiCenter < ballY - 10) {
         rightY += aiSpeed;
@@ -124,16 +129,16 @@
       }
       rightY = Math.max(0, Math.min(gameHeight - 80, rightY));
 
-      // Ball movement
+      // ball
       ballX += ballVX;
       ballY += ballVY;
 
-      // Bounce top/bottom
+      // bounce off sides
       if (ballY <= 0 || ballY + 16 >= gameHeight) {
         ballVY *= -1;
       }
 
-      // Paddle collisions
+      // hit ball
       if (ballX <= 22 && ballY + 16 >= leftY && ballY <= leftY + 80) {
         ballVX *= -1;
         ballX = 22;
@@ -144,7 +149,7 @@
         ballX = gameWidth - 38;
       }
 
-      // Scoring
+      // points
       if (ballX < 0) {
         rightScore++;
         updateScore();
@@ -156,7 +161,6 @@
         resetBall();
       }
 
-      // Draw positions
       left.style.top = leftY + "px";
       right.style.top = rightY + "px";
       ball.style.left = ballX + "px";
