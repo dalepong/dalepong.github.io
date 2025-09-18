@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8">
+  <title>Pong Single Player</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #game {
+      position: relative;
+      width: 90vw;
+      max-width: 600px;
+      height: 70vh;
+      max-height: 400px;
+      background-color: #000;
+      border: 4px solid #fff;
+      overflow: hidden;
+    }
+
+    .paddle {
+      position: absolute;
+      width: 12px;
+      height: 80px;
+      background-color: #fff;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #left {
+      left: 10px;
+    }
+
+    #right {
+      right: 10px;
+    }
+
+    #ball {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background-color: #fff;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <div id="score">0 - 0</div>
+    <div id="left" class="paddle"></div>
+    <div id="right" class="paddle"></div>
+    <div id="ball"></div>
+  </div>
+
+  <script>
+    const game = document.getElementById("game");
+    const left = document.getElementById("left");
+    const right = document.getElementById("right");
+    const ball = document.getElementById("ball");
+    const scoreDisplay = document.getElementById("score");
+
+    let gameWidth = game.clientWidth;
+    let gameHeight = game.clientHeight;
+
+    let leftY = gameHeight / 2 - 40;
+    let rightY = gameHeight / 2 - 40;
+    let ballX = gameWidth / 2 - 8;
+    let ballY = gameHeight / 2 - 8;
+
+    let ballVX = 4 * (Math.random() > 0.5 ? 1 : -1);
+    let ballVY = 3 * (Math.random() > 0.5 ? 1 : -1);
+
+    let leftScore = 0;
+    let rightScore = 0;
+
+    const paddleSpeed = 6;
+    const aiSpeed = 4; // AI paddle movement speed
+
+    const keys = {};
+    document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
+    document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+
+    function resetBall() {
+      ballX = gameWidth / 2 - 8;
+      ballY = gameHeight / 2 - 8;
+      ballVX = 4 * (Math.random() > 0.5 ? 1 : -1);
+      ballVY = 3 * (Math.random() > 0.5 ? 1 : -1);
+    }
+
+    function update() {
+      // Left paddle (player)
+      if (keys["w"]) leftY -= paddleSpeed;
+      if (keys["s"]) leftY += paddleSpeed;
+      leftY = Math.max(0, Math.min(gameHeight - 80, leftY));
+
+      // Right paddle (AI follows ball with smoothing)
+      const aiCenter = rightY + 40;
+      if (aiCenter < ballY - 10) {
+        rightY += aiSpeed;
+      } else if (aiCenter > ballY + 10) {
+        rightY -= aiSpeed;
+      }
+      rightY = Math.max(0, Math.min(gameHeight - 80, rightY));
+
+      // Ball movement
+      ballX += ballVX;
+      ballY += ballVY;
+
+      // Bounce top/bottom
+      if (ballY <= 0 || ballY + 16 >= gameHeight) {
+        ballVY *= -1;
+      }
+
+      // Paddle collisions
+      if (ballX <= 22 && ballY + 16 >= leftY && ballY <= leftY + 80) {
+        ballVX *= -1;
+        ballX = 22;
+      }
+
+      if (ballX + 16 >= gameWidth - 22 && ballY + 16 >= rightY && ballY <= rightY + 80) {
+        ballVX *= -1;
+        ballX = gameWidth - 38;
+      }
+
+      // Scoring
+      if (ballX < 0) {
+        rightScore++;
+        updateScore();
+        resetBall();
+      }
+      if (ballX > gameWidth) {
+        leftScore++;
+        updateScore();
+        resetBall();
+      }
+
+      // Draw positions
+      left.style.top = leftY + "px";
+      right.style.top = rightY + "px";
+      ball.style.left = ballX + "px";
+      ball.style.top = ballY + "px";
+    }
+
+    function updateScore() {
+      scoreDisplay.innerText = `${leftScore} - ${rightScore}`;
+    }
+
+    function loop() {
+      update();
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  </script>
+</body>
+</html>
