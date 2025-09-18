@@ -3,7 +3,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta charset="UTF-8">
-  <title>Pong Single Player</title>
+  <title>dale pong</title>
   <style>
     body {
       margin: 0;
@@ -29,25 +29,31 @@
       position: absolute;
       width: 12px;
       height: 80px;
-      background-color: #fff;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
       top: 50%;
       transform: translateY(-50%);
     }
 
     #left {
       left: 10px;
+      background-image: url('dalered.png');
     }
 
     #right {
       right: 10px;
+      background-image: url('dalered.png'); /* 👈 Replace with your image */
     }
 
     #ball {
       position: absolute;
       width: 16px;
       height: 16px;
-      background-color: #fff;
-      border-radius: 50%;
+      background-image: url('dale.png'); /* 👈 Replace with your image */
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
