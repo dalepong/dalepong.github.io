@@ -32,30 +32,26 @@
       background-size: 100% 100%;
       background-repeat: no-repeat;
       background-position: center;
-      top: 50%;
-      transform: translateY(-50%);
     }
 
     #left {
       left: 10px;
-      background-image: url('dalered.jpg');
+      background-image: url('dalered.jpg'); /* 👈 Replace */
     }
 
     #right {
       right: 10px;
-      background-image: url('dalered.jpg'); 
+      background-image: url('dalered.jpg'); /* 👈 Replace */
+    }
 
     #ball {
       position: absolute;
       width: 16px;
       height: 16px;
-      background-image: url('lebron.jpg');
+      background-image: url('lebron.jpg'); /* 👈 Replace */
       background-size: 100% 100%;
       background-repeat: no-repeat;
       background-position: center;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
     }
 
     #score {
@@ -66,6 +62,7 @@
       font-size: 24px;
       font-weight: bold;
       color: white;
+      z-index: 10; /* Always above */
     }
   </style>
 </head>
@@ -118,7 +115,7 @@
       if (keys["s"]) leftY += paddleSpeed;
       leftY = Math.max(0, Math.min(gameHeight - 80, leftY));
 
-      // Right paddle (AI follows ball with smoothing)
+      // Right paddle (AI)
       const aiCenter = rightY + 40;
       if (aiCenter < ballY - 10) {
         rightY += aiSpeed;
