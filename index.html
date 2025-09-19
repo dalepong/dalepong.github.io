@@ -187,15 +187,15 @@
 
       if (ballX <= leftPadRightX && (ballY + BALL_SIZE) >= leftY && ballY <= (leftY + PADDLE_H)) {
         ballX = leftPadRightX;
-        ballVX = Math.abs(ballVX) * 1.10;
-        ballVY = ballVY * 1.05;
+        ballVX = Math.abs(ballVX) * 1.3;
+        ballVY = ballVY * 1.15;
         capSpeed();
       }
 
       if ((ballX + BALL_SIZE) >= rightPadLeftX && (ballY + BALL_SIZE) >= rightY && ballY <= (rightY + PADDLE_H)) {
         ballX = rightPadLeftX - BALL_SIZE;
-        ballVX = -Math.abs(ballVX) * 1.10;
-        ballVY = ballVY * 1.05;
+        ballVX = -Math.abs(ballVX) * 1.3;
+        ballVY = ballVY * 1.15;
         capSpeed();
       }
 
