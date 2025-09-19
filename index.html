@@ -3,7 +3,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta charset="UTF-8">
-  <title>dalepong</title>
+  <title>dale pong</title>
   <style>
     body {
       margin: 0;
@@ -46,4 +46,147 @@
 
     #right {
       right: 10px;
-      background-image: url('dalered.jpg');
+      background-image: url('dalered.jpg'); 
+    }
+
+    #ball {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background-image: url('lebron.jpg'); 
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      z-index: 10; 
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <div id="score">0 - 0</div>
+    <div id="left" class="paddle"></div>
+    <div id="right" class="paddle"></div>
+    <div id="ball"></div>
+  </div>
+
+  <script>
+    const game = document.getElementById("game");
+    const left = document.getElementById("left");
+    const right = document.getElementById("right");
+    const ball = document.getElementById("ball");
+    const scoreDisplay = document.getElementById("score");
+
+    let gameWidth = game.clientWidth;
+    let gameHeight = game.clientHeight;
+
+    let leftY = gameHeight / 2 - 40;
+    let rightY = gameHeight / 2 - 40;
+    let ballX = gameWidth / 2 - 8;
+    let ballY = gameHeight / 2 - 8;
+
+    // starting speed
+    let initialVX = 4;
+    let initialVY = 3;
+    let ballVX = initialVX * (Math.random() > 0.5 ? 1 : -1);
+    let ballVY = initialVY * (Math.random() > 0.5 ? 1 : -1);
+
+    let leftScore = 0;
+    let rightScore = 0;
+
+    const paddleSpeed = 6;
+    const aiSpeed = 3; // slower AI
+
+    const keys = {};
+    document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
+    document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+
+    // touch controls
+    game.addEventListener("touchstart", handleTouch);
+    game.addEventListener("touchmove", handleTouch);
+
+    function handleTouch(e) {
+      const touchY = e.touches[0].clientY - game.getBoundingClientRect().top;
+      leftY = touchY - 40;
+      leftY = Math.max(0, Math.min(gameHeight - 80, leftY));
+    }
+
+    function resetBall() {
+      ballX = gameWidth / 2 - 8;
+      ballY = gameHeight / 2 - 8;
+      ballVX = initialVX * (Math.random() > 0.5 ? 1 : -1);
+      ballVY = initialVY * (Math.random() > 0.5 ? 1 : -1);
+    }
+
+    function update() {
+      // player (keyboard)
+      if (keys["w"]) leftY -= paddleSpeed;
+      if (keys["s"]) leftY += paddleSpeed;
+      leftY = Math.max(0, Math.min(gameHeight - 80, leftY));
+
+      // ai
+      const aiCenter = rightY + 40;
+      if (aiCenter < ballY - 10) {
+        rightY += aiSpeed;
+      } else if (aiCenter > ballY + 10) {
+        rightY -= aiSpeed;
+      }
+      rightY = Math.max(0, Math.min(gameHeight - 80, rightY));
+
+      // ball
+      ballX += ballVX;
+      ballY += ballVY;
+
+      // bounce off top/bottom
+      if (ballY <= 0 || ballY + 16 >= gameHeight) {
+        ballVY *= -1;
+      }
+
+      // hit left paddle
+      if (ballX <= 22 && ballY + 16 >= leftY && ballY <= leftY + 80) {
+        ballVX *= -1.1; // bounce + faster
+        ballVY *= 1.05; 
+        ballX = 22;
+      }
+
+      // hit right paddle
+      if (ballX + 16 >= gameWidth - 22 && ballY + 16 >= rightY && ballY <= rightY + 80) {
+        ballVX *= -1.1;
+        ballVY *= 1.05;
+        ballX = gameWidth - 38;
+      }
+
+      // score
+      if (ballX < 0) {
+        rightScore++;
+        updateScore();
+        resetBall();
+      }
+      if (ballX > gameWidth) {
+        leftScore++;
+        updateScore();
+        resetBall();
+      }
+
+      left.style.top = leftY + "px";
+      right.style.top = rightY + "px";
+      ball.style.left = ballX + "px";
+      ball.style.top = ballY + "px";
+    }
+
+    function updateScore() {
+      scoreDisplay.innerText = `${leftScore} - ${rightScore}`;
+    }
+
+    function loop() {
+      update();
+      requestAnimationFrame(
