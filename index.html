@@ -3,7 +3,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta charset="UTF-8">
-  <title>dale pong</title>
+  <title>dalepong</title>
   <style>
     body {
       margin: 0;
@@ -194,8 +194,8 @@
 
       if ((ballX + BALL_SIZE) >= rightPadLeftX && (ballY + BALL_SIZE) >= rightY && ballY <= (rightY + PADDLE_H)) {
         ballX = rightPadLeftX - BALL_SIZE;
-        ballVX = -Math.abs(ballVX) * 1.3;
-        ballVY = ballVY * 1.15;
+        ballVX = -Math.abs(ballVX) * 1.05;
+        ballVY = ballVY * 1.02;
         capSpeed();
       }
 
